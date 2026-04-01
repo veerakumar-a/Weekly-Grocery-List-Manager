@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Grocery List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Weekly Grocery List</h1>
+        <p class="subtitle">Smart grocery management system</p>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab active" data-tab="add-tab">➕ Add</button>
+            <button class="tab" data-tab="view-tab">📋 View</button>
+            <button class="tab" data-tab="stats-tab">📊 Stats</button>
+        </div>
+
+        <!-- Add Items Tab -->
+        <div id="add-tab" class="tab-content active">
+            <div class="input-section">
+                <div>
+                    <input 
+                        type="text" 
+                        id="itemInput" 
+                        placeholder="Enter grocery item..."
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="input-row">
+                    <input 
+                        type="number" 
+                        id="priceInput" 
+                        placeholder="Price (₹)"
+                        min="0"
+                        step="0.01"
+                    >
+                    <select id="categorySelect">
+                        <option value="Vegetables">🥬 Vegetables</option>
+                        <option value="Fruits">🍎 Fruits</option>
+                        <option value="Dairy">🥛 Dairy</option>
+                        <option value="Meat">🍗 Meat</option>
+                        <option value="Grains">🌾 Grains</option>
+                        <option value="Spices">🌶️ Spices</option>
+                        <option value="Beverages">☕ Beverages</option>
+                        <option value="Others">📦 Others</option>
+                    </select>
+                    <select id="prioritySelect">
+                        <option value="high">🔴 High</option>
+                        <option value="medium" selected>🟠 Medium</option>
+                        <option value="low">🟢 Low</option>
+                    </select>
+                </div>
+                <button id="addBtn">Add Item</button>
+            </div>
+        </div>
+
+        <!-- View Items Tab -->
+        <div id="view-tab" class="tab-content">
+            <div class="filter-section">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Search items..."
+                >
+                <button class="filter-btn" data-filter="all" data-tab="view-tab">All</button>
+                <button class="filter-btn" data-filter="pending" data-tab="view-tab">Pending</button>
+                <button class="filter-btn" data-filter="bought" data-tab="view-tab">Bought</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title pending-title">📋 Pending Items</div>
+                <div id="pendingList" class="items-list">
+                    <div class="empty-message">No pending items.</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title bought-title">✓ Bought Items</div>
+                <div id="boughtList" class="items-list">
+                    <div class="empty-message">No items bought yet.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Tab -->
+        <div id="stats-tab" class="tab-content">
+            <div class="stats">
+                <div class="stat-item">
+                    📦 Total Items
+                    <strong id="totalCount">0</strong>
+                </div>
+                <div class="stat-item">
+                    ⏳ Pending
+                    <strong id="pendingCount">0</strong>
+                </div>
+                <div class="stat-item">
+                    ✓ Bought
+                    <strong id="boughtCount">0</strong>
+                </div>
+                <div class="stat-item">
+                    💰 Total Cost
+                    <strong id="totalCost">₹0.00</strong>
+                </div>
+                <div class="stat-item">
+                    💵 Spent
+                    <strong id="spentCost">₹0.00</strong>
+                </div>
+                <div class="stat-item">
+                    📈 Remaining
+                    <strong id="remainingCost">₹0.00</strong>
+                </div>
+            </div>
+            <div class="budget-bar" style="margin-top: 15px;">
+                <div class="budget-fill" id="budgetFill" style="width: 0%"></div>
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #999;">
+                <span id="budgetPercentage">0%</span> of budget spent
+            </div>
+
+            <div style="margin-top: 20px;">
+                <h3 style="font-size: 16px; margin-bottom: 10px; color: #333;">Items by Category:</h3>
+                <div id="categoryBreakdown"></div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <button class="export-btn" id="exportBtn">📥 Export List</button>
+            <button class="clear-btn" id="clearBtn">🗑️ Clear All</button>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Item</h3>
+            <input type="text" id="editItemInput" placeholder="Item name">
+            <input type="number" id="editPriceInput" placeholder="Price" min="0" step="0.01">
+            <select id="editCategorySelect">
+                <option value="Vegetables">🥬 Vegetables</option>
+                <option value="Fruits">🍎 Fruits</option>
+                <option value="Dairy">🥛 Dairy</option>
+                <option value="Meat">🍗 Meat</option>
+                <option value="Grains">🌾 Grains</option>
+                <option value="Spices">🌶️ Spices</option>
+                <option value="Beverages">☕ Beverages</option>
+                <option value="Others">📦 Others</option>
+            </select>
+            <select id="editPrioritySelect">
+                <option value="high">🔴 High</option>
+                <option value="medium">🟠 Medium</option>
+                <option value="low">🟢 Low</option>
+            </select>
+            <div class="modal-buttons">
+                <button class="cancel-btn" id="cancelEditBtn">Cancel</button>
+                <button class="confirm-btn" id="confirmEditBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
